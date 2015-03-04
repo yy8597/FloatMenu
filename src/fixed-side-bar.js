@@ -2,27 +2,28 @@
 // module
 !(function () {
 	// Feature test to rule out some older browsers
-  	if ("querySelector" in document && "addEventListener" in window) {
-	    var titles = document.querySelectorAll('h1.mTitle');
+	    var titles = $('h1.mTitle');
 	    var lists = [];
-	    var fixedSide = document.getElementById('fix-side');
+	    var fixedSide = $('#fix-side');
 	    var content = [];
-	    var container = fixedSide.querySelector('.fix-menu');
+	    var container = fixedSide.find('.fix-menu');
 	    // container.className = '';
 
 
-	    if(titles){
+	    if(titles.length){
 	    	var length = titles.length;
-		    forEach(titles, function (i, title) {
-		    	var list = document.createElement('a');
-		    	list.setAttribute('href', '#' + title.id);
-		    	list.setAttribute('data-scroll', null);
-		    	list.innerHTML = title.getAttribute('title') || title.innerText;
-		    	list.setAttribute('title', list.innerHTML);
-		    	// list.style.top = -20 * (length - i) + 'px';
+		    titles.each(function (i, title) {
+		    	var list = $('<a>');
+		    	list.html($(this).attr('title') || $(this).text());
+		    	list.attr({
+		    		"href" : '#' + $(this).attr('id'),
+		    		"data-scroll" : null,
+		    		"title" : list.html()
+		    	})
+
 		    	lists.push(list);
 
-		    	container.appendChild(list);
+		    	container.append(list);
 		    	
 		    });
 		    // fixedSide.appendChild(container);
@@ -32,18 +33,15 @@
 
 		var relocation = function () {
 			content = [0]
-			if(titles){
-				forEach(titles, function (i, title) {
-					content.push(_getLocation(title));
-				});
-			}
+			titles.each(function () {
+				content.push($(this).offset().top);
+			});
 		}
 		var _resizeList = [];
 
 		relocation();
 
-		
-		window.addEventListener("resize", function () {resizeHandler()}, false);
+		$(window).bind('resize', function () {resizeHandler()})
 	    var resizeHandler = function () {
 	    	relocation();
 	        forEach(_resizeList, function (i, _resizeFn) {
@@ -54,17 +52,18 @@
 	    // Highlight active link on the navigation
 	    var selectActiveMenuItem = function (i) {
 		    forEach(lists, function (i, el) {
-		        lists[i].className = lists[i].className.replace(/[\s]{0,}active/, "");
+		    	var thelist = lists[i][0];
+		        thelist.className = thelist.className.replace(/[\s]{0,}active/, "");
 		    });
 		    if(i < 0){
 		    	return;
 		    }
-		    lists[i].className += lists[i].className ? " active" : "active";
+		    lists[i][0].className += lists[i][0].className ? " active" : "active";
 	    };
 
 	    // Highlight active link when scrolling
 		var wasNavigationTapped = false;
-		window.addEventListener("scroll", function () {
+		$(window).bind('scroll', function () {
 
 			// Determine viewport and body size
 			var top = window.pageYOffset,
@@ -94,8 +93,7 @@
 					selectActiveMenuItem(- 1);
 				}
 			}
-		}, false);
-
+		})
 		
 
 		// Attach FastClick to remove the 300ms tap delay
@@ -113,7 +111,6 @@
 	    	}
 	    }
 
-	}
 	// forEach method, that passes back the stuff we need
 	function forEach (array, callback, scope) {
 		for (var i = 0; i < array.length; i++) {
@@ -145,6 +142,7 @@
 !(function () {
 	if(fixedSideBar){
 		fixedSideBar.onResize(function (container) {
+			container = container[0]
 			if(document.body.clientWidth < 960){
 				if(container.className.indexOf('fix-menu-mini') == -1){
 					container.className += ' fix-menu-mini';
