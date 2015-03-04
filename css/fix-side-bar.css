@@ -1,0 +1,39 @@
+.fix-menu{
+	position: absolute;
+	right: 0px;
+	width: 120px;
+	bottom: 60px;
+}
+
+.fix-menu a{
+	/*position: absolute;
+	right: 0;
+	width: 100px;*/
+	padding: 5px 7px;
+	float: right;
+	clear: both;
+	text-align: right;
+}
+
+.fix-menu a.active{
+	background: #333;
+	color: #ddd;
+}
+
+.fix-menu-mini{
+	width: 10px;
+}
+
+.fix-menu-mini a{
+	width: 5px;
+	display: block;
+	overflow: hidden;
+	height: 5px;
+	background: #ccc;
+	text-indent: 100px;
+	margin-top: 4px;
+}
+
+.fix-menu-mini a.active{
+	
+	}
