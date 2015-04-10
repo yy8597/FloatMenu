@@ -115,6 +115,7 @@ window.smoothScroll = (function (window, document, undefined) {
   // Public method
   // Runs functions
   var animateScroll = function ( toggle, anchor, options, event ) {
+    console.log(toggle);
 
     // Options and overrides
     options = _mergeObjects( _defaults, options || {} ); // Merge user options with defaults
